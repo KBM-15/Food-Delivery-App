@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodFlow - Place Your Order</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header Styles */
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        .back-home {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            margin-top: 15px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .back-home:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        /* Card Styles */
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        .card h2 {
+            margin-bottom: 25px;
+            color: #333;
+            border-left: 4px solid #FF6B35;
+            padding-left: 15px;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #FF6B35;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255,107,53,0.3);
+        }
+
+        button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        /* Meal Grid with Images */
+        .meal-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .meal-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .meal-option:hover {
+            background: #e8f4f8;
+            transform: translateX(5px);
+        }
+
+        .meal-option.selected {
+            border-color: #FF6B35;
+            background: linear-gradient(135deg, #FF6B3520 0%, #F7931E20 100%);
+        }
+
+        .meal-option img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .meal-option span {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .stat-card h3 {
+            font-size: 28px;
+            color: #FF6B35;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            color: #666;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Messages */
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+            animation: slideDown 0.5s ease;
+            font-weight: 500;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Navigation Buttons */
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .nav-btn {
+            flex: 1;
+            background: #f0f0f0;
+            color: #333;
+            text-align: center;
+            padding: 12px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: #FF6B35;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Info Box */
+        .info-box {
+            background: linear-gradient(135deg, #FF6B3510 0%, #F7931E10 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .info-box p {
+            padding: 8px 0;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .meal-grid {
+                grid-template-columns: 1fr;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            .card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🍕 Place Your Delivery Order</h1>
+            <p>Help us improve food delivery in Yaoundé by sharing your experience</p>
+            <a href="/" class="back-home">← Back to Home</a>
+        </div>
+
+        <div class="grid">
+            <!-- Left Column: Order Form -->
+            <div>
+                <div class="card">
+                    <h2>📝 Order Details</h2>
+                    <form id="deliveryForm">
+                        <div class="form-group">
+                            <label>👤 Customer Age</label>
+                            <input type="number" id="age" required min="18" max="80" placeholder="e.g., 25">
+                        </div>
+
+                        <div class="form-group">
+                            <label>📍 Delivery Location</label>
+                            <select id="location" required>
+                                <option value="">Select your location</option>
+                                <option value="Simbock">Simbock</option>
+                                <option value="Ngou-ekele">Ngou-ekele</option>
+                                <option value="Biyem-Assi">Biyem-Assi</option>
+                                <option value="Cite U">Cite U</option>
+                                <option value="Jouvance">Jouvance</option>
+                                <option value="Bonas">Bonas</option>
+                                <option value="Cradat">Cradat</option>
+                                <option value="Vogt">Vogt</option>
+                                <option value="Nsimeyong">Nsimeyong</option>
+                                <option value="Damas">Damas</option>
+                                <option value="TKC">TKC</option>
+                                <option value="Rond Point Express">Rond Point Express</option>
+                                <option value="Acacia">Acacia</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>🍽️ Select Your Meal</label>
+                            <div class="meal-grid" id="mealGrid">
+                                <div class="meal-option" data-meal="Pizza">
+                                    <img src="https://images.pexels.com/photos/825661/pexels-photo-825661.jpeg" alt="Pizza" onerror="this.src='https://via.placeholder.com/60x60?text=Pizza'">
+                                    <span>🍕 Pizza - 2500 FCFA</span>
+                                </div>
+                                <div class="meal-option" data-meal="Burgers">
+                                    <img src="https://images.pexels.com/photos/1639557/pexels-photo-1639557.jpeg" alt="Burger" onerror="this.src='https://via.placeholder.com/60x60?text=Burger'">
+                                    <span>🍔 Burger - 2000 FCFA</span>
+                                </div>
+                                <div class="meal-option" data-meal="Sandwich">
+                                    <img src="https://images.pexels.com/photos/1600727/pexels-photo-1600727.jpeg" alt="Sandwich" onerror="this.src='https://via.placeholder.com/60x60?text=Sandwich'">
+                                    <span>🥪 Sandwich - 1500 FCFA</span>
+                                </div>
+                                <div class="meal-option" data-meal="Crispy Chicken and Fries">
+                                    <img src="https://images.pexels.com/photos/1624487/pexels-photo-1624487.jpeg" alt="Crispy Chicken" onerror="this.src='https://via.placeholder.com/60x60?text=Chicken'">
+                                    <span>🍗 Crispy Chicken & Fries - 1800 FCFA</span>
+                                </div>
+                                <div class="meal-option" data-meal="Shawarma">
+                                    <img src="https://images.pexels.com/photos/3244513/pexels-photo-3244513.jpeg" alt="Shawarma" onerror="this.src='https://via.placeholder.com/60x60?text=Shawarma'">
+                                    <span>🌯 Shawarma - 2200 FCFA</span>
+                                </div>
+                            </div>
+                            <input type="hidden" id="meal" required>
+                            <small style="color: #999; display: block; margin-top: 5px;">👆 Click on any meal to select</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label>💰 Order Value (FCFA)</label>
+                            <input type="number" id="orderValue" required step="100" min="500" max="50000" placeholder="e.g., 2500">
+                        </div>
+
+                        <div class="form-group">
+                            <label>⏱️ Delivery Time (minutes)</label>
+                            <input type="number" id="deliveryTime" required min="10" max="120" placeholder="e.g., 35">
+                        </div>
+
+                        <div class="form-group">
+                            <label>💵 Delivery Fee (FCFA)</label>
+                            <input type="number" id="deliveryFee" required step="100" min="0" max="5000" placeholder="e.g., 500">
+                        </div>
+
+                        <div class="form-group">
+                            <label>⭐ Customer Rating</label>
+                            <select id="rating" required>
+                                <option value="5">5 - Excellent ⭐⭐⭐⭐⭐</option>
+                                <option value="4">4 - Good ⭐⭐⭐⭐</option>
+                                <option value="3">3 - Average ⭐⭐⭐</option>
+                                <option value="2">2 - Poor ⭐⭐</option>
+                                <option value="1">1 - Terrible ⭐</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>📏 Distance (km)</label>
+                            <input type="number" id="distance" required step="0.5" min="1" max="20" placeholder="e.g., 5.5">
+                        </div>
+
+                        <div class="form-group">
+                            <label>🌤️ Weather Condition</label>
+                            <select id="weather" required>
+                                <option value="Sunny">☀️ Sunny</option>
+                                <option value="Rainy">🌧️ Rainy</option>
+                                <option value="Cloudy">☁️ Cloudy</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>🕐 Time of Day</label>
+                            <select id="timeOfDay" required>
+                                <option value="Morning">🌅 Morning (6AM-12PM)</option>
+                                <option value="Afternoon">☀️ Afternoon (12PM-5PM)</option>
+                                <option value="Evening">🌙 Evening (5PM-9PM)</option>
+                                <option value="Night">🌃 Night (9PM-6AM)</option>
+                            </select>
+                        </div>
+
+                        <button type="submit">📊 Submit Order Data</button>
+                    </form>
+                    <div id="successMessage" class="success-message"></div>
+                </div>
+            </div>
+
+            <!-- Right Column: Live Stats -->
+            <div>
+                <div class="card">
+                    <h2>📈 Live Statistics</h2>
+                    <div id="statsContainer">
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <h3 id="totalOrders">0</h3>
+                                <p>Total Orders</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3 id="avgRating">-</h3>
+                                <p>Average Rating</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3 id="avgDeliveryTime">-</h3>
+                                <p>Avg Delivery Time</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3 id="avgOrderValue">-</h3>
+                                <p>Avg Order Value</p>
+                            </div>
+                        </div>
+                        <div id="moreStats" style="margin-top: 15px; font-size: 14px; color: #666; line-height: 1.8;"></div>
+                    </div>
+                    
+                    <div class="nav-buttons">
+                        <a href="/dashboard" class="nav-btn">📊 Full Dashboard</a>
+                        <a href="/analysis" class="nav-btn">🧠 Advanced Analysis</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>🎯 Why Share Your Data?</h2>
+                    <div class="info-box">
+                        <p>✓ Help improve delivery times in Yaoundé</p>
+                        <p>✓ Identify which areas need better service</p>
+                        <p>✓ Understand customer preferences</p>
+                        <p>✓ Contribute to data-driven decisions</p>
+                        <p>✓ Get insights about your favorite restaurants</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>📍 Popular Delivery Areas</h2>
+                    <div class="info-box">
+                        <p>🏙️ Simbock | Ngou-ekele | Biyem-Assi</p>
+                        <p>🏘️ Cite U | Jouvance | Bonas</p>
+                        <p>🏠 Cradat | Vogt | Nsimeyong</p>
+                        <p>🌆 Damas | TKC | Rond Point Express | Acacia</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Meal selection with images
+        document.querySelectorAll('.meal-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove selected class from all
+                document.querySelectorAll('.meal-option').forEach(o => o.classList.remove('selected'));
+                // Add selected class to clicked
+                this.classList.add('selected');
+                // Set hidden input value
+                document.getElementById('meal').value = this.dataset.meal;
+            });
+        });
+
+        // Load stats when page loads
+        loadStats();
+
+        // Handle form submission
+        document.getElementById('deliveryForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Validate meal selection
+            const selectedMeal = document.getElementById('meal').value;
+            if (!selectedMeal) {
+                alert('🍽️ Please select a meal before submitting!');
+                return;
+            }
+            
+            // Validate age
+            const age = parseInt(document.getElementById('age').value);
+            if (age < 18 || age > 80) {
+                alert('👤 Age must be between 18 and 80 years old!');
+                return;
+            }
+            
+            // Validate order value
+            const orderValue = parseFloat(document.getElementById('orderValue').value);
+            if (orderValue < 500) {
+                alert('💰 Order value must be at least 500 FCFA!');
+                return;
+            }
+            
+            // Collect form data
+            const data = {
+                customer_age: age,
+                customer_location: document.getElementById('location').value,
+                choose_meal: selectedMeal,
+                order_value: orderValue,
+                delivery_time_min: parseInt(document.getElementById('deliveryTime').value),
+                delivery_fee: parseFloat(document.getElementById('deliveryFee').value),
+                rating: parseInt(document.getElementById('rating').value),
+                distance_km: parseFloat(document.getElementById('distance').value),
+                weather_condition: document.getElementById('weather').value,
+                time_of_day: document.getElementById('timeOfDay').value
+            };
+            
+            // Show loading state on button
+            const submitBtn = document.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = '⏳ Submitting...';
+            submitBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/submit', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Show success message
+                    const msgDiv = document.getElementById('successMessage');
+                    msgDiv.innerHTML = '✓ ' + result.message + ' 🎉';
+                    msgDiv.style.display = 'block';
+                    
+                    // Refresh stats
+                    loadStats();
+                    
+                    // Reset form
+                    document.getElementById('deliveryForm').reset();
+                    document.querySelectorAll('.meal-option').forEach(o => o.classList.remove('selected'));
+                    document.getElementById('meal').value = '';
+                    
+                    // Scroll to success message
+                    msgDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    
+                    // Hide success message after 3 seconds
+                    setTimeout(() => {
+                        msgDiv.style.display = 'none';
+                    }, 3000);
+                } else {
+                    alert('❌ Error: ' + (result.error || 'Something went wrong'));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ Connection error! Make sure the server is running at http://127.0.0.1:5000');
+            } finally {
+                // Reset button
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+
+        async function loadStats() {
+            try {
+                const response = await fetch('/api/descriptive_stats');
+                const stats = await response.json();
+                
+                if (stats.total_responses > 0) {
+                    document.getElementById('totalOrders').textContent = stats.total_responses;
+                    document.getElementById('avgRating').textContent = stats.avg_rating + ' ★';
+                    document.getElementById('avgDeliveryTime').textContent = stats.avg_delivery_time + ' min';
+                    document.getElementById('avgOrderValue').textContent = stats.avg_order_value + ' FCFA';
+                    document.getElementById('moreStats').innerHTML = `
+                        📊 Average Customer Age: ${stats.avg_customer_age} years<br>
+                        💵 Average Delivery Fee: ${stats.avg_delivery_fee} FCFA<br>
+                        📏 Average Distance: ${stats.avg_distance} km<br>
+                        ⭐ Rating Breakdown: 
+                        5★(${stats.rating_distribution['5_star']}) 
+                        4★(${stats.rating_distribution['4_star']}) 
+                        3★(${stats.rating_distribution['3_star']}) 
+                        2★(${stats.rating_distribution['2_star']}) 
+                        1★(${stats.rating_distribution['1_star']})
+                    `;
+                } else {
+                    document.getElementById('totalOrders').textContent = '0';
+                    document.getElementById('avgRating').textContent = '-';
+                    document.getElementById('avgDeliveryTime').textContent = '-';
+                    document.getElementById('avgOrderValue').textContent = '-';
+                    document.getElementById('moreStats').innerHTML = '📭 No data yet. Be the first to submit an order!';
+                }
+            } catch (error) {
+                console.error('Stats error:', error);
+                document.getElementById('moreStats').innerHTML = '⏳ Waiting for server connection...';
+            }
+        }
+
+        // Auto-refresh stats every 10 seconds
+        setInterval(loadStats, 10000);
+        
+        // Add input validation for order value
+        document.getElementById('orderValue').addEventListener('input', function() {
+            if (this.value < 500) {
+                this.setCustomValidity('Minimum order value is 500 FCFA');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+        
+        // Add input validation for delivery time
+        document.getElementById('deliveryTime').addEventListener('input', function() {
+            if (this.value < 10) {
+                this.setCustomValidity('Delivery time cannot be less than 10 minutes');
+            } else if (this.value > 120) {
+                this.setCustomValidity('Delivery time cannot exceed 120 minutes');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+        
+        // Add input validation for distance
+        document.getElementById('distance').addEventListener('input', function() {
+            if (this.value < 1) {
+                this.setCustomValidity('Distance cannot be less than 1 km');
+            } else if (this.value > 20) {
+                this.setCustomValidity('Distance cannot exceed 20 km');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+    </script>
+</body>
+</html>

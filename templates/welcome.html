@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodFlow - Welcome to Yaoundé's Smart Delivery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Hero Section with Background Image */
+        .hero {
+            height: 100vh;
+            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.6)), url('/static/images/hero-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .hero-content {
+            z-index: 2;
+            max-width: 800px;
+            padding: 20px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255,107,53,0.4);
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 80px 20px;
+            background: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            color: #333;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .feature-content {
+            padding: 25px;
+        }
+
+        .feature-content h3 {
+            color: #FF6B35;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .feature-content p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            color: white;
+            padding: 60px 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .stat-item p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        /* Meal Showcase */
+        .meals-section {
+            padding: 80px 20px;
+            background: white;
+        }
+
+        .meals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .meal-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .meal-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .meal-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .meal-info {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .meal-info h4 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        .meal-info p {
+            color: #FF6B35;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .hero p {
+                font-size: 1rem;
+            }
+            .section-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="hero-content">
+            <h1>🍕 FoodFlow Yaoundé</h1>
+            <p>Smart Food Delivery Analytics for Cameroon's Capital</p>
+            <a href="/order" class="cta-button">🍽️ What would you like to order today? →</a>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="features-section">
+        <div class="container">
+            <h2 class="section-title">Why Choose FoodFlow?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <img src="https://images.pexels.com/photos/5632402/pexels-photo-5632402.jpeg" alt="Data Collection" class="feature-image">
+                    <div class="feature-content">
+                        <h3>📊 Smart Data Collection</h3>
+                        <p>Track delivery metrics, customer preferences, and service quality in real-time</p>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <img src="https://images.pexels.com/photos/669615/pexels-photo-669615.jpeg" alt="Analytics" class="feature-image">
+                    <div class="feature-content">
+                        <h3>📈 Advanced Analytics</h3>
+                        <p>Machine learning insights to optimize delivery routes and times</p>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <img src="https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg" alt="Real-time" class="feature-image">
+                    <div class="feature-content">
+                        <h3>⚡ Real-time Dashboard</h3>
+                        <p>Live statistics and performance metrics for better decision making</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popular Meals Showcase -->
+    <div class="meals-section">
+        <div class="container">
+            <h2 class="section-title">Popular Dishes in Yaoundé</h2>
+            <div class="meals-grid">
+                <div class="meal-card" onclick="window.location.href='/order'">
+                    <img src="/static/images/pizza.jpg" alt="Pizza" class="meal-image">
+                    <div class="meal-info">
+                        <h4>🍕 Italian Pizza</h4>
+                        <p>Starting at 2500 FCFA</p>
+                    </div>
+                </div>
+                <div class="meal-card" onclick="window.location.href='/order'">
+                    <img src="/static/images/burger.jpg" alt="Burger" class="meal-image">
+                    <div class="meal-info">
+                        <h4>🍔 Gourmet Burger</h4>
+                        <p>Starting at 2000 FCFA</p>
+                    </div>
+                </div>
+                <div class="meal-card" onclick="window.location.href='/order'">
+                    <img src="/static/images/sandwich.jpg" alt="Sandwich" class="meal-image">
+                    <div class="meal-info">
+                        <h4>🥪 Club Sandwich</h4>
+                        <p>Starting at 1500 FCFA</p>
+                    </div>
+                </div>
+                <div class="meal-card" onclick="window.location.href='/order'">
+                    <img src="/static/images/chicken.jpg" alt="Chicken" class="meal-image">
+                    <div class="meal-info">
+                        <h4>🍗 Crispy Chicken</h4>
+                        <p>Starting at 1800 FCFA</p>
+                    </div>
+                </div>
+                <div class="meal-card" onclick="window.location.href='/order'">
+                    <img src="/static/images/shawarma.jpg" alt="Shawarma" class="meal-image">
+                    <div class="meal-info">
+                        <h4>🌯 Beef Shawarma</h4>
+                        <p>Starting at 2200 FCFA</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Section (Live Data) -->
+    <div class="stats-section" id="statsSection">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h3 id="totalOrdersLive">0</h3>
+                    <p>Orders Completed</p>
+                </div>
+                <div class="stat-item">
+                    <h3 id="avgRatingLive">-</h3>
+                    <p>Average Rating</p>
+                </div>
+                <div class="stat-item">
+                    <h3 id="avgDeliveryLive">-</h3>
+                    <p>Avg Delivery Time</p>
+                </div>
+                <div class="stat-item">
+                    <h3 id="deliveryPartners">12</h3>
+                    <p>Delivery Partners</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>© 2026 FoodFlow Yaoundé</p>
+        <p style="margin-top: 10px; font-size: 0.9rem;">📍 Serving: Simbock, Ngou-ekele, Biyem-Assi, Cite U, Jouvance, Bonas, Cradat, Vogt, Nsimeyong, Damas, TKC, Rond Point Express, Acacia</p>
+    </div>
+
+    <script>
+        async function loadLiveStats() {
+            try {
+                const response = await fetch('/api/descriptive_stats');
+                const stats = await response.json();
+                
+                if (stats.total_responses > 0) {
+                    document.getElementById('totalOrdersLive').textContent = stats.total_responses;
+                    document.getElementById('avgRatingLive').textContent = stats.avg_rating + ' ★';
+                    document.getElementById('avgDeliveryLive').textContent = stats.avg_delivery_time + ' min';
+                }
+            } catch (error) {
+                console.log('Waiting for first order...');
+            }
+        }
+        
+        loadLiveStats();
+        setInterval(loadLiveStats, 5000);
+    </script>
+</body>
+</html>

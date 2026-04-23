@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodFlow - Complete Analysis Report</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .report-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        h1 { color: #667eea; }
+        .technique {
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+            margin: 20px 0;
+        }
+        .back-btn {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            margin-bottom: 20px;
+        }
+        pre {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 10px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-btn">← Back to Collection</a>
+        <div class="report-card">
+            <h1>Complete Analysis Report</h1>
+            <p><strong>Project:</strong> Food Delivery Data Analysis Platform</p>
+            <p><strong>Domain:</strong> Food Delivery & Customer Analytics</p>
+            
+            <div class="technique">
+                <h2>1️⃣ Simple Linear Regression</h2>
+                <p>Analyzes relationship between delivery distance and time.</p>
+                <pre id="simpleReg"></pre>
+            </div>
+            
+            <div class="technique">
+                <h2>2️⃣ Multiple Linear Regression</h2>
+                <p>Multiple factors affecting delivery performance.</p>
+                <pre id="multiReg"></pre>
+            </div>
+            
+            <div class="technique">
+                <h2>3️⃣ PCA - Dimensionality Reduction</h2>
+                <p>Reduces data complexity while preserving information.</p>
+                <pre id="pca"></pre>
+            </div>
+            
+            <div class="technique">
+                <h2>4️⃣ Supervised Classification (Random Forest)</h2>
+                <p>Predicts fast vs slow deliveries.</p>
+                <pre id="classification"></pre>
+            </div>
+            
+            <div class="technique">
+                <h2>5️⃣ Unsupervised Classification (K-Means)</h2>
+                <p>Customer segmentation analysis.</p>
+                <pre id="clustering"></pre>
+            </div>
+        </div>
+    </div>
+    <script>
+        async function loadAll() {
+            const endpoints = ['simple_regression', 'multiple_regression', 'pca', 'classification', 'clustering'];
+            for (const ep of endpoints) {
+                const res = await fetch(`/api/${ep}`);
+                const data = await res.json();
+                const element = document.getElementById(ep === 'simple_regression' ? 'simpleReg' : 
+                                                      ep === 'multiple_regression' ? 'multiReg' :
+                                                      ep === 'pca' ? 'pca' :
+                                                      ep === 'classification' ? 'classification' : 'clustering');
+                if (element) {
+                    element.textContent = JSON.stringify(data, null, 2);
+                }
+            }
+        }
+        loadAll();
+    </script>
+</body>
+</html>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodFlow - Advanced Analytics Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a2e;
+            color: white;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            /* Fixed: Removed -webkit-background-clip, using standard color instead */
+            color: #667eea;
+        }
+
+        .back-btn {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #764ba2;
+        }
+
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h2 {
+            margin-bottom: 20px;
+            color: #667eea;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .insight {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
+        }
+
+        .badge-technique {
+            display: inline-block;
+            background: #667eea;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+
+        details summary {
+            cursor: pointer;
+            color: #667eea;
+            margin-top: 10px;
+        }
+
+        details pre {
+            background: rgba(0,0,0,0.5);
+            padding: 10px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.8rem;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .analysis-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-btn">← Back to Data Collection</a>
+        
+        <div class="header">
+            <h1>📊 Advanced Data Analysis Dashboard</h1>
+            <!--<p>Complete implementation of INF232 EC2 course techniques</p>-->
+            <p style="font-size: 0.9rem; margin-top: 10px;">🎓 Simple Linear Regression | Multiple Linear Regression | PCA | Classification | Clustering</p>
+        </div>
+
+        <div class="analysis-grid" id="analysisGrid">
+            <div class="loading">Loading analysis data... Please wait ⏳</div>
+        </div>
+    </div>
+
+    <script>
+        async function loadAllAnalyses() {
+            const techniques = [
+                { name: 'Simple Linear Regression', endpoint: '/api/simple_regression', icon: '📈', description: 'Predicting delivery time from distance' },
+                { name: 'Multiple Linear Regression', endpoint: '/api/multiple_regression', icon: '📊', description: 'Multiple factors affecting delivery' },
+                { name: 'PCA Dimensionality Reduction', endpoint: '/api/pca', icon: '🎯', description: 'Reducing data complexity' },
+                { name: 'Supervised Classification', endpoint: '/api/classification', icon: '🤖', description: 'Fast vs Slow delivery prediction' },
+                { name: 'Unsupervised Clustering', endpoint: '/api/clustering', icon: '🔮', description: 'Customer segmentation' }
+            ];
+
+            const grid = document.getElementById('analysisGrid');
+            grid.innerHTML = '';
+
+            for (const tech of techniques) {
+                try {
+                    const response = await fetch(tech.endpoint);
+                    const data = await response.json();
+                    
+                    if (!data.error) {
+                        grid.appendChild(createTechniqueCard(tech, data));
+                    } else {
+                        grid.appendChild(createErrorCard(tech, data.error));
+                    }
+                } catch (error) {
+                    console.error(`Error loading ${tech.name}:`, error);
+                    grid.appendChild(createErrorCard(tech, 'Need more data for this analysis (minimum 5-20 records required)'));
+                }
+            }
+        }
+
+        function createTechniqueCard(tech, data) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            
+            let content = `
+                <div class="badge-technique">${tech.icon} ${tech.name}</div>
+                <h2>${data.description || tech.description}</h2>
+            `;
+
+            if (tech.endpoint.includes('simple_regression')) {
+                content += `
+                    <p><strong>📐 Equation:</strong> ${data.equation || 'N/A'}</p>
+                    <p><strong>🎯 R² Score:</strong> <span class="stat-value">${data.r2_score || 'N/A'}</span></p>
+                    <p><strong>📏 RMSE:</strong> ${data.rmse || 'N/A'} minutes</p>
+                    <p><strong>📈 Coefficient:</strong> ${data.coefficient || 'N/A'} minutes/km</p>
+                    <div class="insight">💡 <strong>Insight:</strong> ${data.interpretation || 'More data needed for interpretation'}</div>
+                `;
+            } 
+            else if (tech.endpoint.includes('multiple_regression')) {
+                content += `
+                    <p><strong>🎯 R² Score:</strong> <span class="stat-value">${data.r2_score || 'N/A'}</span></p>
+                    <p><strong>📏 RMSE:</strong> ${data.rmse || 'N/A'} minutes</p>
+                    <p><strong>🔥 Most influential factor:</strong> ${data.most_influential || 'N/A'}</p>
+                    <div class="insight">💡 <strong>Insight:</strong> ${data.interpretation || 'More data needed for interpretation'}</div>
+                `;
+                if (data.feature_coefficients) {
+                    content += `
+                        <details>
+                            <summary>🔍 View all coefficients</summary>
+                            <pre>${JSON.stringify(data.feature_coefficients, null, 2)}</pre>
+                        </details>
+                    `;
+                }
+            }
+            else if (tech.endpoint.includes('pca')) {
+                content += `
+                    <p><strong>📊 Original dimensions:</strong> ${data.original_dimensions || 'N/A'}</p>
+                    <p><strong>⚡ After PCA (95% variance):</strong> <span class="stat-value">${data.components_for_95_percent_variance || 'N/A'}</span> dimensions</p>
+                    <p><strong>📈 Explained variance (PC1):</strong> ${data.explained_variance_ratio ? (data.explained_variance_ratio[0] * 100).toFixed(1) : 'N/A'}%</p>
+                    <p><strong>📉 Explained variance (PC2):</strong> ${data.explained_variance_ratio ? (data.explained_variance_ratio[1] * 100).toFixed(1) : 'N/A'}%</p>
+                    <div class="insight">💡 <strong>Insight:</strong> ${data.interpretation || 'More data needed for PCA analysis'}</div>
+                `;
+            }
+            else if (tech.endpoint.includes('classification')) {
+                content += `
+                    <p><strong>✅ Accuracy:</strong> <span class="stat-value">${data.accuracy ? (data.accuracy * 100).toFixed(1) : 'N/A'}%</span></p>
+                    <p><strong>📦 Fast deliveries (&lt;30 min):</strong> ${data.fast_deliveries || 0}</p>
+                    <p><strong>🐢 Slow deliveries (≥30 min):</strong> ${data.slow_deliveries || 0}</p>
+                    <p><strong>🔑 Key predictor:</strong> ${data.most_important_feature || 'N/A'}</p>
+                    <div class="insight">💡 <strong>Insight:</strong> ${data.interpretation || 'More data needed for classification'}</div>
+                `;
+                if (data.feature_importance) {
+                    content += `
+                        <details>
+                            <summary>🔍 View feature importance</summary>
+                            <pre>${JSON.stringify(data.feature_importance, null, 2)}</pre>
+                        </details>
+                    `;
+                }
+            }
+            else if (tech.endpoint.includes('clustering')) {
+                content += `
+                    <p><strong>👥 Customer segments found:</strong> ${data.number_of_clusters || 'N/A'}</p>
+                `;
+                if (data.cluster_names) {
+                    for (const [cluster, name] of Object.entries(data.cluster_names)) {
+                        content += `<p><strong>${cluster}:</strong> ${name}</p>`;
+                    }
+                }
+                if (data.cluster_profiles) {
+                    content += `
+                        <details>
+                            <summary>🔍 View cluster profiles</summary>
+                            <pre>${JSON.stringify(data.cluster_profiles, null, 2)}</pre>
+                        </details>
+                    `;
+                }
+                content += `<div class="insight">💡 <strong>Insight:</strong> ${data.interpretation || 'More data needed for clustering'}</div>`;
+            }
+
+            card.innerHTML = content;
+            return card;
+        }
+
+        function createErrorCard(tech, message) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <div class="badge-technique">${tech.icon} ${tech.name}</div>
+                <h2>⚠️ Insufficient Data</h2>
+                <p>${message}</p>
+                <div class="insight">📝 <strong>Tip:</strong> Submit more delivery records (at least 5-20) to enable this analysis. The more data, the better the insights!</div>
+            `;
+            return card;
+        }
+
+        
+        loadAllAnalyses();
+        
+        
+        setInterval(loadAllAnalyses, 30000);
+    </script>
+</body>
+</html>
